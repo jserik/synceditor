@@ -1,10 +1,13 @@
+// server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const port = 4000;
 
+// Set up pug as view engine
+app.set('view engine', 'pug');
+
 app.use(bodyParser.urlencoded({ extended: false }));
-// Specify the url prefix and import routes
 app.use('/', require('./routes'));
 
 app.listen(port, () => {
