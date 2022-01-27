@@ -1,15 +1,24 @@
-// server.js
 const express = require('express');
+const logger = require('morgan');
 const bodyParser = require('body-parser');
+
+const Routes = require('./routes');
+
 const app = express();
-const port = 4000;
+const PORT = process.env.PORT || 3000;
 
-// Set up pug as view engine
-app.set('view engine', 'pug');
+// app configurations
+app.set('port', PORT);
 
+// load app middlewares
+app.use(logger('dev'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use('/', require('./routes'));
 
-app.listen(port, () => {
-  console.log(`Success! Your application is running on port ${port}.`);
-});
+// load our API routes
+app.use('/', Routes);
+
+// http server connection
+app.listen(PORT, () =>
+    console.log(`Server is listening at http://localhost:${PORT}`)
+);
