@@ -1,22 +1,35 @@
 const express = require('express');
 const router = express.Router();
+const uuid = require('uuid');
+const Post = require("./models/Post") // new
 
-// import files
+var data = JSON.parse(db);
 
-//const schema = require('./schema')
-// generic route handler
-const genericHandler = (req, res, next) => {
+const update = (req, res, next) => {
   res.json({
     status: 'success',
-    data: req.body
+    data: req.body,
   });
 };
 
-// update text
-router.post('/update', genericHandler);
+const createID = (req, res, next) => {
+  res.json({
+    status: 'success',
+    data: userID
+  });
+};
 
-// change auth credentials for teachers
-router.get('/data', genericHandler);
+const getData = (req, res, next) => {
+  res.json({
+    status: 'success',
+    data: data
+  });
+};
+router.post('/update', update);
 
+router.get('/data/:ID/', getData);
+
+router.post('/create', createID);
 
 module.exports = router;
+
