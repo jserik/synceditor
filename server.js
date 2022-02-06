@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const Routes = require('./routes');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // app configurations
 app.set('port', PORT);
@@ -22,4 +22,5 @@ app.use('/', Routes);
 app.listen(PORT, () =>
     console.log(`Server is listening at http://localhost:${PORT}`)
 );
+
 

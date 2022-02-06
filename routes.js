@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const uuid = require('uuid');
-const Post = require("./models/Post") // new
-
-var data = JSON.parse(db);
+const { gen } = require('n-digit-token');
 
 const update = (req, res, next) => {
   res.json({
@@ -13,9 +10,10 @@ const update = (req, res, next) => {
 };
 
 const createID = (req, res, next) => {
+  ID = gen(6);
   res.json({
     status: 'success',
-    data: userID
+    data: ID,
   });
 };
 
