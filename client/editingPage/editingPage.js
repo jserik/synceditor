@@ -1,7 +1,12 @@
 last_input = null
-TextUpdate = function (e){
+
+TextUpdateHeavy = function(e){
+    SendData(e.value)
+}
+
+TextUpdateLeightWeight = function (e){
     if(last_input!=null){
-        new_data = GetIntersection(e.value, last_input)
+        new_data = GetTextUpdate(e.value, last_input)
         console.log(new_data)
         globalThis.last_input = e.value;
     }
@@ -13,17 +18,19 @@ TextUpdate = function (e){
     SendData(new_data);
 }
 
-function GetIntersection(a, b){
+function GetTextUpdate(a, b){
     if(a.length > b.length){
         return {
             intersection: a.replace(b, ''),
             second: 1,
+            position: b.length
         };
     }
     else if(a.length < b.length){
         return {
             intersection: b.replace(a, ''),
             second: -1,
+            position: a.length
         };
     }
 }
