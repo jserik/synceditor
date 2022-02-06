@@ -2,7 +2,7 @@ require("dotenv").config({ path: "./config.env" });
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-
+const connectDB = require("./config/db");
 const Routes = require('./routes');
 
 const app = express();
@@ -18,6 +18,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // load our API routes
 app.use('/', Routes);
+
+connectDB();
 
 // http server connection
 app.listen(PORT, () =>
