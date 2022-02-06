@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // load our API routes
 app.use('/', Routes);
 
-connectDB();
+//connectDB();
 
 // http server connection
 app.listen(PORT, () =>
