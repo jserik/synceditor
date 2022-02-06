@@ -42,13 +42,12 @@ h1{
 
     font-family: 'Roboto Mono', monospace;
 }
-
-.DigitInput{
-    width: 1ch;
+#IdInput{
+    width: 6ch;
     font-family: 'Roboto Mono', monospace;
 
-    border: 5px;
-    border-radius: 7px;
+    outline: 5px;
+    outline-color: black;
 
     font-size: 2rem;
 	height: 100%;
