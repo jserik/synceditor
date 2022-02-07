@@ -49,8 +49,39 @@ const getData = (req, res, next) => {
   }
 }
 
+const updateData = (req, res, next) => {
+  let code = req.body.id;
+  try {
+    if (fs.existsSync(`${code}.json`)) {
+      const inputJSON = JSON.stringify(req.body.data);
+
+      try {
+        fs.writeFileSync(`${code}.json`, inputJSON);
+
+      } catch (err) {
+        console.log(err)
+      }
+
+      res.json({
+        status: "sucess, updated",
+        data: inputJSON
+      });
+    } else {
+      res.json({
+        status: "failure",
+        message: "No Document with follwing ID could be found!",
+      });
+    }
+  } catch (err) {
+    console.log(err)
+
+  }
+}
+
+
 router.post('/document', getData);
 
+router.post('/update', updateData);
 
 router.post('/create', createID);
 
