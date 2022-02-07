@@ -2,7 +2,7 @@
 
 ## routes 
 
-> /update -> update the the data in database(unique ID is required!) 
+> /update -> update the the data in database(unique ID is required!) <br>
 > /create -> generates an unqiue id and taking data as input for the file 
 > /retrieve -> get data back from the database 
 
