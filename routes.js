@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { gen } = require('n-digit-token');
+const fs = require('fs');
 
 const update = (req, res, next) => {
   res.json({
@@ -11,6 +12,14 @@ const update = (req, res, next) => {
 
 const createID = (req, res, next) => {
   ID = gen(6);
+  const inputJSON = JSON.stringify(req.body.data);
+  try {
+    fs.writeFileSync(`${ID}.json`, inputJSON);
+
+  } catch (err) {
+    res.send(err);
+  }
+
   res.json({
     status: 'success',
     data: ID,
@@ -18,14 +27,30 @@ const createID = (req, res, next) => {
 };
 
 const getData = (req, res, next) => {
-  res.json({
-    status: 'success',
-    data: data
-  });
-};
-router.post('/update', update);
+  let code = req.body.id;
+  try {
+    if (fs.existsSync(`${code}.json`)) {
+      const dataJSON = fs.readFileSync(`${code}.json`, 'utf8');
 
-router.get('/data/:ID/', getData);
+      const data = JSON.parse(dataJSON);
+
+      res.json({
+        status: "sucess",
+        data: data
+      });
+    } else {
+      res.json({
+        status: "failure",
+        message: "No Document with follwing ID could be found!",
+      });
+    }
+  } catch (err) {
+    res.send(err);
+  }
+}
+
+router.post('/document', getData);
+
 
 router.post('/create', createID);
 

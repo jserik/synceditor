@@ -4,6 +4,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const connectDB = require("./config/db");
 const Routes = require('./routes');
+const cors = require('cors')
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -15,6 +16,8 @@ app.set('port', PORT);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static('public'));
+app.use(cors());
 
 // load our API routes
 app.use('/', Routes);
