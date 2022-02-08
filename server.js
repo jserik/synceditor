@@ -2,12 +2,11 @@ require("dotenv").config({ path: "./config.env" });
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const connectDB = require("./config/db");
 const Routes = require('./routes');
 const cors = require('cors')
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 // app configurations
 app.set('port', PORT);
