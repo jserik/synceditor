@@ -7,7 +7,7 @@ const createID = (req, res, next) => {
   ID = gen(6);
   const inputJSON = JSON.stringify(req.body.data);
   try {
-    fs.writeFileSync(`${ID}.json`, inputJSON);
+    fs.writeFileSync(`./db/${ID}.json`, inputJSON);
 
   } catch (err) {
     res.send(err);
@@ -22,8 +22,8 @@ const createID = (req, res, next) => {
 const getData = (req, res, next) => {
   let code = req.body.id;
   try {
-    if (fs.existsSync(`${code}.json`)) {
-      const dataJSON = fs.readFileSync(`${code}.json`, 'utf8');
+    if (fs.existsSync(`./db/${code}.json`)) {
+      const dataJSON = fs.readFileSync(`./db/${code}.json`, 'utf8');
 
       const data = JSON.parse(dataJSON);
 
@@ -45,11 +45,11 @@ const getData = (req, res, next) => {
 const updateData = (req, res, next) => {
   let code = req.body.id;
   try {
-    if (fs.existsSync(`${code}.json`)) {
+    if (fs.existsSync(`./db/${code}.json`)) {
       const inputJSON = JSON.stringify(req.body.data);
 
       try {
-        fs.writeFileSync(`${code}.json`, inputJSON);
+        fs.writeFileSync(`./db/${code}.json`, inputJSON);
 
       } catch (err) {
         console.log(err)
