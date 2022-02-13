@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { gen } = require('n-digit-token');
 const fs = require('fs');
-
+const path = require('path')
 const createID = (req, res, next) => {
   ID = gen(6);
   const inputJSON = JSON.stringify(req.body.data);
@@ -10,7 +10,7 @@ const createID = (req, res, next) => {
     fs.writeFileSync(`./db/${ID}.json`, inputJSON);
 
   } catch (err) {
-    res.send(err);
+    console.log(err)
   }
 
   res.json({
@@ -72,11 +72,16 @@ const updateData = (req, res, next) => {
 }
 
 
-router.post('/retrieve', getData);
+router.post('/api/retrieve', getData);
 
-router.post('/update', updateData);
+router.post('/api/update', updateData);
 
-router.post('/create', createID);
+router.post('/api/create', createID);
+
+router.get('/', (req, res, next) => {
+  res.sendFile(path.join(__dirname, './client/homePage/homePage.html'))
+
+})
 
 module.exports = router;
 
