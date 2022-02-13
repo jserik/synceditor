@@ -1,0 +1,32 @@
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+
+const meeting = 
+[
+    {id: 1, name: meeting1},
+    {id: 2, name: meeting2},
+    {id: 3, name: meeting3},
+
+];
+
+
+
+app.get('/', (req, res) =>
+{
+    //some Code
+    res.send('/');
+
+});
+
+app.post('/', (req,res) =>
+{
+    //some Code
+    const informations =
+    {
+        id: meeting.length +1,   
+        name: req.body.name
+    };
+});
