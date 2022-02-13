@@ -10,8 +10,7 @@
 
 ```
 install Docker
-git clone https://github.com/AI-DC-Bot/RealTimeTextEditor.git
-<br>
+git clone https://github.com/AI-DC-Bot/RealTimeTextEditor.git <br>
 docker build --tag realtimetexteditor .
 docker run -e PORT=5000 -p 5000:5000 realtimetexteditor
 ```
