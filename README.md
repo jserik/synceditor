@@ -9,10 +9,10 @@
 ## usage 
 
 ```
-> install Docker <br>
-> git clone https://github.com/AI-DC-Bot/RealTimeTextEditor.git <br>
-> docker build --tag realtimetexteditor . <br>
-> docker run -e PORT=5000 -p 5000:5000 realtimetexteditor
+ install Docker 
+ git clone https://github.com/AI-DC-Bot/RealTimeTextEditor.git 
+ docker build --tag realtimetexteditor . 
+ docker run -e PORT=5000 -p 5000:5000 realtimetexteditor
 ```
 
 # Docker info:
