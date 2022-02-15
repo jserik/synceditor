@@ -4,9 +4,68 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="editingPage.css">
-    <script src="editingPage.js"></script>
+    <!--<link rel="stylesheet" href="editingPage.css">-->
+    <!--<script src="editingPage.js"></script>-->
     <title>Real Time Texteditor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+        h1{
+            color: white; 
+            align-content: center; 
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        #textarea{
+            width: 100%; 
+            height: 90vh; 
+            color: black; 
+            font-size:20px; 
+            border-radius: 17px;
+        } 
+    </style>
+    <script>
+        last_input = null
+
+        TextUpdateHeavy = function(e){
+            SendData(e.value)
+        }
+
+        TextUpdateLeightWeight = function (e){
+            if(last_input!=null){
+                new_data = GetTextUpdate(e.value, last_input)
+                console.log(new_data)
+                globalThis.last_input = e.value;
+            }
+            else{
+                new_data = e.value
+                console.log(new_data)
+                globalThis.last_input = e.value;
+            }
+            SendData(new_data);
+        }
+
+        function GetTextUpdate(a, b){
+            if(a.length > b.length){
+                return {
+                    intersection: a.replace(b, ''),
+                    second: 1,
+                    position: b.length
+                };
+            }
+            else if(a.length < b.length){
+                return {
+                    intersection: b.replace(a, ''),
+                    second: -1,
+                    position: a.length
+                };
+            }
+        }
+
+        function SendData(data){
+            // Send Data
+        }
+    </script>
 </head>
 <body style="background-color: black; margin: 25px;">
     <div class="ThreeDots">
