@@ -4,6 +4,7 @@ const { gen } = require('n-digit-token');
 const fs = require('fs');
 const path = require('path')
 const createID = (req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
   ID = gen(6);
   const inputJSON = JSON.stringify(req.body.data);
   try {
@@ -20,6 +21,7 @@ const createID = (req, res, next) => {
 };
 
 const getData = (req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
   let code = req.body.id;
   try {
     if (fs.existsSync(`./db/${code}.json`)) {
@@ -43,6 +45,7 @@ const getData = (req, res, next) => {
 }
 
 const updateData = (req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
   let code = req.body.id;
   try {
     if (fs.existsSync(`./db/${code}.json`)) {
