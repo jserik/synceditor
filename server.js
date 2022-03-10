@@ -15,8 +15,7 @@ app.set('port', PORT);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('public'));
-app.use(express.static('files'));
+app.use(express.static('./client/'));
 app.use(cors());
 
 // load our API routes
