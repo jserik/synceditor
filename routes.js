@@ -3,6 +3,7 @@ const router = express.Router();
 const { gen } = require('n-digit-token');
 const fs = require('fs');
 const path = require('path')
+
 const createID = (req, res, next) => {
   ID = gen(6);
   const inputJSON = JSON.stringify(req.body.data);
@@ -15,7 +16,8 @@ const createID = (req, res, next) => {
 
   res.json({
     status: 'success',
-    data: ID,
+    id: ID,
+    data: inputJSON,
   });
 };
 
