@@ -73,7 +73,6 @@
         }
     </style>
     <script>
-        const hostIP = window.location.host;
         const xhr = new XMLHttpRequest();
         $(document).ready(function(){
             $("#IdInput").on("keypress",function(e){
@@ -104,10 +103,9 @@
         })
 
         function Load(){
-            console.log(hostIP)
-            let Text = {"Etxt":String("Text")}
+            let Text = {"data":String("Text")}
 
-            xhr.open('POST', String(hostIP)+'/api/create', true);
+            xhr.open('POST', '/api/create', true);
 
             xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -117,6 +115,7 @@
                         if (xhr.status == 200){
                             var json_data = xhr.responseText; 
                             $("OwnID").val(json_data.ID)
+                            console.log(json_data.ID)
                         }
                     }       
                 }
