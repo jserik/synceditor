@@ -3,6 +3,7 @@ const router = express.Router();
 const { gen } = require("n-digit-token");
 const fs = require("fs");
 const path = require("path");
+const { getSystemErrorMap } = require("util");
 
 const createUser = (req, res, next) => {
     ID = gen(6);
@@ -15,12 +16,18 @@ const createUser = (req, res, next) => {
 
 const createDB = (req, res, next) => {
     userID = req.body.id;
+    let isNum= /^\d+$/.test(userID);
 
     const inputJSON = JSON.stringify(req.body.data);
     if (fs.existsSync(`./db/${userID}.json`)) {
         res.json({
             status: "failure",
             error: `A room with following ID: ${userID} already exists!`,
+        });
+    } else if (!isNum ||userID.lenght > 6 || userID.lenght < 6) {
+        res.json({
+            status: "failure",
+            error: `This Id does not fit the requirements: ${userID}`,
         });
     } else {
         try {
