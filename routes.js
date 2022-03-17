@@ -5,50 +5,53 @@ const fs = require("fs");
 const path = require("path");
 const { getSystemErrorMap } = require("util");
 
-const createUser = (req, res, next) => {
-    ID = gen(6);
+//const createUser = (req, res, next) => {
+//    ID = gen(6);
 
-    res.json({
-        status: "success",
-        id: ID,
-    });
-};
+//    res.json({
+//        status: "success",
+//        id: ID,
+//    });
+//};
 
+// Input: None
+// Doing: creates ID and creates a database for same ID
+// Output: your ID
 const createDB = (req, res, next) => {
-    userID = req.body.id;
-    let isNum= /^\d+$/.test(userID);
-
-    const inputJSON = JSON.stringify(req.body.data);
-    if (fs.existsSync(`./db/${userID}.json`)) {
+    ID = gen(6);
+    const welcomeText = JSON.stringify('Lets start edeting!');
+    // let isNum= /^\d+$/.test(userID);
+    // const inputJSON = JSON.stringify(req.body.data);
+    if (fs.existsSync(`./db/${ID}.json`)) {
         res.json({
             status: "failure",
-            error: `A room with following ID: ${userID} already exists!`,
+            error: `A room with following ID: ${ID} already exists!`,
         });
-    } else if (!isNum ||userID.lenght > 6 || userID.lenght < 6) {
-        res.json({
-            status: "failure",
-            error: `This Id does not fit the requirements: ${userID}`,
-        });
+    // } else if (!isNum || userID.lenght > 6 || userID.lenght < 6) {
+    //    res.json({
+    //        status: "failure",
+    //        error: `This Id does not fit the requirements: ${userID}`,
+    //    });
     } else {
         try {
-            fs.writeFileSync(`./db/${userID}.json`, inputJSON);
+            fs.writeFileSync(`./db/${ID}.json`, welcomeText);
         } catch (err) {
             console.log(err);
         }
 
         res.json({
             status: "success",
-            id: userID,
-            data: inputJSON,
+            id: ID
         });
     }
 
     res.end();
 };
 
+// Input: ID
+// Output: returns current data for that ID
 const getData = (req, res, next) => {
     let code = req.body.id;
-    console.log(code);
     try {
         if (fs.existsSync(`./db/${code}.json`)) {
             const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");
@@ -57,6 +60,7 @@ const getData = (req, res, next) => {
 
             res.json({
                 status: "sucess",
+                id: code,
                 data: data,
             });
         } else {
@@ -70,6 +74,9 @@ const getData = (req, res, next) => {
     }
 };
 
+// Input: ID, newe Text
+// Doing: updates database with your input
+// Output: your ID + your input
 const updateData = (req, res, next) => {
     let code = req.body.id;
     try {
@@ -84,6 +91,7 @@ const updateData = (req, res, next) => {
 
             res.json({
                 status: "sucess, updated",
+                id: code,
                 data: inputJSON,
             });
         } else {
@@ -101,9 +109,9 @@ router.post("/api/retrieve", getData);
 
 router.post("/api/update", updateData);
 
-router.get("/api/createid", createUser);
+// router.get("/api/createid", createUser);
 
-router.post("/api/createdb", createDB);
+router.post("/api/create", createDB);
 
 router.get("/", (req, res, next) => {
     res.sendFile(path.join(__dirname, "./client/homePage/homePage.html"));
