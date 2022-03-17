@@ -15,26 +15,33 @@ const createUser = (req, res, next) => {
 
 const createDB = (req, res, next) => {
     userID = req.body.id;
-    console.log(userID);
 
     const inputJSON = JSON.stringify(req.body.data);
-    console.log(inputJSON);
-    try {
-        fs.writeFileSync(`./db/${userID}.json`, inputJSON);
-    } catch (err) {
-        console.log(err);
+    if (fs.existsSync(`./db/${userID}.json`)) {
+        res.json({
+            status: "failure",
+            error: `A room with following ID: ${userID} already exists!`,
+        });
+    } else {
+        try {
+            fs.writeFileSync(`./db/${userID}.json`, inputJSON);
+        } catch (err) {
+            console.log(err);
+        }
+
+        res.json({
+            status: "success",
+            id: userID,
+            data: inputJSON,
+        });
     }
 
-    res.json({
-        status: "success",
-        id: userID,
-        data: inputJSON,
-    });
+    res.end();
 };
 
 const getData = (req, res, next) => {
     let code = req.body.id;
-    console.log(code)
+    console.log(code);
     try {
         if (fs.existsSync(`./db/${code}.json`)) {
             const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");

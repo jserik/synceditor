@@ -20,8 +20,6 @@ app.use(cors());
 // load our API routes
 app.use('/', Routes);
 
-//connectDB();
-
 // http server connection
 app.listen(PORT, () =>
     console.log(`Server is listening at http://localhost:${PORT}`)
