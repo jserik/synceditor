@@ -3,7 +3,6 @@ const router = express.Router();
 const { gen } = require("n-digit-token");
 const fs = require("fs");
 const path = require("path");
-const { getSystemErrorMap } = require("util");
 
 //const createUser = (req, res, next) => {
 //    ID = gen(6);
@@ -17,6 +16,7 @@ const { getSystemErrorMap } = require("util");
 // Input: None
 // Doing: creates ID and creates a database for same ID
 // Output: your ID
+
 const createDB = (req, res, next) => {
     ID = gen(6);
     const welcomeText = JSON.stringify('Lets start edeting!');
@@ -36,7 +36,10 @@ const createDB = (req, res, next) => {
         try {
             fs.writeFileSync(`./db/${ID}.json`, welcomeText);
         } catch (err) {
-            console.log(err);
+            res.json({
+                status: "failure",
+                error: `Just try again`,
+            });
         }
 
         res.json({
@@ -52,8 +55,9 @@ const createDB = (req, res, next) => {
 // Output: returns current data for that ID
 const getData = (req, res, next) => {
     let code = req.body.id;
+    let isNum= /^\d+$/.test(code);
     try {
-        if (fs.existsSync(`./db/${code}.json`)) {
+        if (isNUm && fs.existsSync(`./db/${code}.json`)) {
             const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");
 
             const data = JSON.parse(dataJSON);
@@ -79,8 +83,9 @@ const getData = (req, res, next) => {
 // Output: your ID + your input
 const updateData = (req, res, next) => {
     let code = req.body.id;
+    let isNum= /^\d+$/.test(code);
     try {
-        if (fs.existsSync(`./db/${code}.json`)) {
+        if (issNum && fs.existsSync(`./db/${code}.json`)) {
             const inputJSON = JSON.stringify(req.body.data);
 
             try {
