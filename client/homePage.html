@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+    input:focus {outline:none!important;}
+
+    #heading{
+        text-align: center;
+        font-family: 'Roboto Mono', monospace;
+    }
+    h1{
+        margin-bottom: 0%;
+    }
+    .creditsUnderline{
+        margin-top: 0%;
+    }
+
+    #rooms{
+        margin-left: auto; margin-right: auto;
+        width: 30%;
+        height: 300px;
+
+        border:1px solid black;
+        border-width: 5px;
+        border-radius: 25px;
+        border-color: black;
+
+        text-align: center;
+        font-family: 'Roboto Mono', monospace;
+    }
+
+    h2{
+        margin-top: 30px;
+    }
+
+    #RoomIDInput{
+        margin-left: auto; margin-right: auto;
+        width: 6ch;
+
+        border: 0px;
+        border-bottom:1px solid black;
+        border-width: 2px;
+        border-color: black;
+
+        font-size: larger;
+        font-family: 'Roboto Mono', monospace;
+    }
+
+    #ErrorParag{
+        color: red;
+    }
+</style>
+<script>
+    $(document).ready(function(){
+            $("#createRoom").on("click", function(e){
+                console.log("Click! Button")
+                
+                xhr.open('POST', '/api/create', false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send( null );
+                console.log(JSON.parse(xhr.responseText));
+            })
+            $("#RoomIDInput").on("keypress",function(e){
+                
+                //console.log(e.keyCode)
+
+                //Enter
+                if(e.keyCode==13){
+                    console.log("Enter!")
+                    const InputID = String($("#RoomIDInput").val())
+                    console.log(InputID)
+                    /*
+                    if(InputID.length<=5){
+                        console.log("Must be 6 digits long!")
+                        $('#ErrorParag').text('Must be 6 digits long!')
+                        $("#ErrorParag").css('color', 'red');
+                    }
+                    else if(!isNaN(parseInt(InputID))){ 
+                        console.log("Only Numbers!")
+                        // Change Error Paragraph
+                        $('#ErrorParag').text('Onl Numbers!')
+                        $("#ErrorParag").css('color', 'red');
+                    }
+                    else{
+                        console.log("Allright!")
+                        $('#ErrorParag').text('Allright!')
+                        $("#ErrorParag").css('color', 'green');
+                    }
+                    */
+                    const newDir = location.origin+'/wait?id='+String(InputID)
+                    console.log(newDir)
+                    location.href=newDir
+                }
+                else{
+                    let input = String.fromCharCode(e.which)
+                    //console.log(e)
+                    //console.log(e.target.id)
+                    
+                    if(!["1","2","3","4","5","6","7","8","9"].includes(input)){ 
+                        //console.log("Only Numbers!")
+                        // Change Error Paragraph
+                        $('#ErrorParag').text('Only Numbers!')
+                        $("#ErrorParag").css('color', 'red');
+                    }
+                    else{
+                        // clear error field
+                        $('#ErrorParag').text('')
+                    }
+                }
+            })
+        })
+
+</script>
+<body>
+    <div id="heading">
+        <h1>Real-Time-Text-Editor</h1>
+        <p class="creditsUnderline">Project by: Moritttzzzz a. Deepmoon</p>
+    </div>
+    <div id="rooms">
+        <h2>Create a room</h2>
+        <button id="createRoom">Create!</button>
+        <h2>or join a room ... </h2>
+        <input id="RoomIDInput" maxlength="6" placeholder="ID">
+        <p id="ErrorParag"></p>
+    </div>
+
+</body>
+</html>

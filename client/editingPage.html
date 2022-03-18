@@ -25,6 +25,12 @@
         } 
     </style>
     <script>
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+        const ID = params.id; // "some_value"
+        console.log(ID)
+
         last_input = null
 
         TextUpdateHeavy = function(e){
@@ -63,7 +69,10 @@
         }
 
         function SendData(data){
-            // Send Data
+            xhr.open('POST', '/api/create', false);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send( null );
+            console.log(JSON.parse(xhr.responseText));
         }
     </script>
 </head>
@@ -72,6 +81,6 @@
         
     </div>
     <h1>Real Time Texteditor</h1>
-    <textarea id="textarea" placeholder="Just write ..." oninput="TextUpdate(this)"></textarea>
+    <textarea id="textarea" placeholder="Just write ..." oninput="TextUpdateHeavy(this)"></textarea>
 </body>
 </html>

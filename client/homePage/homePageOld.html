@@ -103,8 +103,8 @@
         })
 
         function Load(){
-
             xhr.open('GET', '/api/createid', false);
+            xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send( null );
             console.log(JSON.parse(xhr.responseText).id);
             $("#OwnID").text(JSON.parse(xhr.responseText).id);

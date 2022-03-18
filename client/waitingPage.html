@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<script>
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+    let ID = params.id; // "some_value"
+    console.log(ID)
+
+    $(document).ready(function(){
+        $("#NameIn").on("keypress", function(e){
+            if(e.keyCode==13){
+                //Name wird erstmal nicht genutzt
+                const newDir = location.origin+"/edit?id="+String(ID)
+                console.log(newDir)
+                location.href = newDir
+            }
+        })
+    })
+</script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+    h1{
+        text-align: center;
+
+        font-family: 'Roboto Mono', monospace;
+    }
+
+    #createName{
+        width: 400px;
+        height: 300px;
+        margin-right: auto; margin-left: auto;
+
+        align-content: center;
+        text-align: center;
+        justify-content: center;
+
+        font-family:'Roboto Mono', monospace;
+    }
+</style>
+<body>
+    <h1 id="head">Waiting for Host ...</h1>
+    <%=Request.QueryString%>
+    <div id="createName">
+        <h2>Choose a name:</h2>
+        <input type="text" id="NameIn">
+        <p>Press enter to continue</p>
+    </div>
+</body>
+</html>

@@ -118,8 +118,17 @@ router.post("/api/update", updateData);
 
 router.post("/api/create", createDB);
 
+//home Page
 router.get("/", (req, res, next) => {
-    res.sendFile(path.join(__dirname, "./client/homePage/homePage.html"));
+    res.sendFile(path.join(__dirname, "./client/homePage.html"));
+});
+//waiting Page
+router.get("/wait", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "./client/waitingPage.html"));
+});
+//editing Page
+router.get("/edit", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "./client/editingPage.html"));
 });
 
 module.exports = router;
