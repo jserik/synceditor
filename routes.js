@@ -31,6 +31,20 @@ const validate = (validateCode) => {
     }
 };
 
+// currently in Work!
+const checkName = (name) => {
+    try {
+        if (1 == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+};
+
 const createDB = (req, res, next) => {
     ID = gen(6);
     text = { content: "Let's start edeting!", users: {} };
