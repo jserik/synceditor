@@ -32,13 +32,19 @@ const validate = (validateCode) => {
 };
 
 // currently in Work!
-const checkName = (name) => {
+const checkName = (id, name) => {
     try {
-        if (1 == 1) {
-            return true;
-        } else {
-            return false;
+        const dataJSON = fs.readFileSync(`./db/${id}.json`, "utf8");
+        const raw = JSON.parse(dataJSON);
+        const users = raw.users;
+
+        for (i in users) {
+           if (users[i] == name) {
+                return false;
+           } 
         }
+        return true;
+
     } catch (err) {
         console.log(err);
         return false;
@@ -141,10 +147,9 @@ const updateData = (req, res, next) => {
 
 const addUser = (req, res, next) => {
     let code = req.body.id;
-
+    let user = req.body.user;
     try {
-        if (validate(code)) {
-            let user = req.body.user;
+        if (validate(code) && checkName(code, user)) {
 
             try {
                 const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");
@@ -205,9 +210,9 @@ router.post("/api/update", updateData);
 
 router.post("/api/create", createDB);
 
-router.post("/api/create/user", addUser);
+router.post("/api/createuser", addUser);
 
-router.post("/api/get/user", returnUser);
+router.post("/api/getuser", returnUser);
 
 //home Page
 router.get("/", (req, res, next) => {
