@@ -26,7 +26,7 @@
     #rooms{
         margin-left: auto; margin-right: auto;
         width: 30%;
-        height: 300px;
+        height: 310px;
 
         border:1px solid black;
         border-width: 5px;
@@ -54,11 +54,24 @@
         font-family: 'Roboto Mono', monospace;
     }
 
+    #createRoom{
+        font-family: 'Roboto Mono', monospace;
+        font-weight: bold;
+
+        border-color: black;
+        border: 5px;
+        border-radius: 50px;
+        height: 32px;
+        width: 100px;
+        background-color: gainsboro;
+    }
+
     #ErrorParag{
         color: red;
     }
 </style>
 <script>
+    const xhr =  new XMLHttpRequest();
     $(document).ready(function(){
             $("#createRoom").on("click", function(e){
                 console.log("Click! Button")
@@ -66,7 +79,25 @@
                 xhr.open('POST', '/api/create', false);
                 xhr.setRequestHeader("Content-Type", "application/json");
                 xhr.send( null );
-                console.log(JSON.parse(xhr.responseText));
+                const response = JSON.parse(xhr.responseText)
+                console.log(response);
+                console.log(response.status)
+                
+                //redirect to new site
+                if(response.status == "success"){
+                    const newDir = location.origin+"/wait?id="+String(response.id)
+                    console.log(newDir)
+                    location.href = newDir
+                }
+                else{
+                    try{
+                        $('#ErrorParag').text(response.error)
+                        $("#ErrorParag").css('color', 'red');
+                    }catch{
+                        $('#ErrorParag').text("It seems like the server has massive problems ...")
+                        $("#ErrorParag").css('color', 'red');
+                    }
+                }
             })
             $("#RoomIDInput").on("keypress",function(e){
                 
@@ -77,27 +108,37 @@
                     console.log("Enter!")
                     const InputID = String($("#RoomIDInput").val())
                     console.log(InputID)
-                    /*
-                    if(InputID.length<=5){
-                        console.log("Must be 6 digits long!")
-                        $('#ErrorParag').text('Must be 6 digits long!')
+                    if(InputID.length==6){
+                        for(let i = 0; i<6;i++){
+                            //console.log(InputID[i])
+                            if(!["1","2","3","4","5","6","7","8","9"].includes(InputID[i])){ 
+                                //console.log("Only Numbers!")
+                                // Change Error Paragraph
+                                $('#ErrorParag').text('Only Numbers!')
+                                $("#ErrorParag").css('color', 'red');
+                                return
+                            }
+                        }
+                    }
+                    else{return}
+                    //check for ID 
+                    xhr.open('POST', '/api/checkID', false);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.send(JSON.stringify({
+                        "id":String(InputID)
+                    }));
+                    const response = JSON.parse(xhr.responseText)
+                    //console.log(response);
+                    if(response.status == "failure"){
+                        $('#ErrorParag').text(response.error)
                         $("#ErrorParag").css('color', 'red');
                     }
-                    else if(!isNaN(parseInt(InputID))){ 
-                        console.log("Only Numbers!")
-                        // Change Error Paragraph
-                        $('#ErrorParag').text('Onl Numbers!')
-                        $("#ErrorParag").css('color', 'red');
+                    else if(response.status == "success"){
+                        const newDir = location.origin+'/wait?id='+String(response.id)
+                        console.log(newDir)
+                        location.href=newDir
                     }
-                    else{
-                        console.log("Allright!")
-                        $('#ErrorParag').text('Allright!')
-                        $("#ErrorParag").css('color', 'green');
-                    }
-                    */
-                    const newDir = location.origin+'/wait?id='+String(InputID)
-                    console.log(newDir)
-                    location.href=newDir
+                    
                 }
                 else{
                     let input = String.fromCharCode(e.which)
@@ -129,6 +170,7 @@
         <button id="createRoom">Create!</button>
         <h2>or join a room ... </h2>
         <input id="RoomIDInput" maxlength="6" placeholder="ID">
+        <p>Continue w. Enter</p>
         <p id="ErrorParag"></p>
     </div>
 

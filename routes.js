@@ -54,6 +54,25 @@ const checkName = (id, name) => {
     }
 };
 
+// Input: ID
+// Doing: creates ID and creates a database for same ID
+// Output: if DB with that ID or not
+const checkForID = (req, res, next) => {
+    let ID = req.body.id;
+    if (fs.existsSync(`./db/${ID}.json`)) {
+        res.json({
+            status: "success",
+            id: ID,
+        });
+    }else{
+        res.json({
+            status: "failure",
+            error: `Room doesn't exist!`,
+        });
+    }
+    res.end();
+}
+
 // Input: None
 // Doing: creates ID and creates a database for same ID
 // Output: your ID
@@ -95,7 +114,7 @@ const getData = (req, res, next) => {
             const data = raw.content;
 
             res.json({
-                status: "sucess",
+                status: "success",
                 id: code,
                 lastEditor: raw.lastEdited,
                 data: data,
@@ -103,7 +122,7 @@ const getData = (req, res, next) => {
         } else {
             res.json({
                 status: "failure",
-                message: "No Document with follwing ID could be found!",
+                error: "No Document with follwing ID could be found!",
             });
         }
     } catch (err) {
@@ -133,14 +152,14 @@ const updateData = (req, res, next) => {
             }
 
             res.json({
-                status: "sucess, updated",
+                status: "success, updated",
                 id: code,
                 data: inputJSON,
             });
         } else {
             res.json({
                 status: "failure",
-                message: "No Document with follwing ID could be found or the editor is no approved user!",
+                error: "No Document with follwing ID could be found or the editor is no approved user!",
             });
         }
     } catch (err) {
@@ -164,15 +183,16 @@ const addUser = (req, res, next) => {
             }
 
             res.json({
-                status: "sucess, updated",
+                status: "success",
                 id: code,
-                data: user,
+                name: user,
             });
         } else {
             res.json({
                 status: "failure",
-                message:
-                    "Wrong ID or the name aleready exsists or the name is mutual!",
+                error:
+                    //Wrong ID or the name aleready exsists or the name is mutual!
+                    "User Name not allowed or allready exists!",
             });
         }
     } catch (err) {
@@ -190,14 +210,14 @@ const returnUser = (req, res, next) => {
             const data = raw.users;
 
             res.json({
-                status: "sucess",
+                status: "success",
                 id: code,
                 data: data,
             });
         } else {
             res.json({
                 status: "failure",
-                message: "No Document with follwing ID could be found!",
+                error: "No Document with follwing ID could be found!",
             });
         }
     } catch (err) {
@@ -205,15 +225,17 @@ const returnUser = (req, res, next) => {
     }
 };
 
+router.post("/api/checkID", checkForID);
+
 router.post("/api/retrieve", getData);
 
 router.post("/api/update", updateData);
 
 router.post("/api/create", createDB);
 
-router.post("/api/createuser", addUser);
+router.post("/api/createUser", addUser);
 
-router.post("/api/getuser", returnUser);
+router.post("/api/getUser", returnUser);
 
 //home Page
 router.get("/", (req, res, next) => {

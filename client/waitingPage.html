@@ -14,13 +14,37 @@
     let ID = params.id; // "some_value"
     console.log(ID)
 
+    const xhr =  new XMLHttpRequest();
+
     $(document).ready(function(){
         $("#NameIn").on("keypress", function(e){
             if(e.keyCode==13){
-                //Name wird erstmal nicht genutzt
-                const newDir = location.origin+"/edit?id="+String(ID)
-                console.log(newDir)
-                location.href = newDir
+
+                xhr.open('POST', '/api/createUser', false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({
+                    "id":String(ID),
+                    "user":String($("#NameIn").val())
+                }));
+                const response = JSON.parse(xhr.responseText)
+                console.log(response);
+
+                if(response.status == "failure"){
+                    $('#ErrorParag').text(response.error)
+                    $("#ErrorParag").css('color', 'red');
+                }
+                else if(response.status == "success"){
+                    const newDir = location.origin+"/edit?id="+String(response.id)+"&name="+String(response.name)
+                    console.log(newDir)
+                    location.href = newDir
+                }
+                else{
+                    $('#ErrorParag').text("It seems like the server has massive problems ...")
+                    $("#ErrorParag").css('color', 'red');
+                }
+
+                
+                
             }
         })
     })
@@ -48,11 +72,11 @@
 </style>
 <body>
     <h1 id="head">Waiting for Host ...</h1>
-    <%=Request.QueryString%>
     <div id="createName">
         <h2>Choose a name:</h2>
         <input type="text" id="NameIn">
         <p>Press enter to continue</p>
+        <p id="ErrorParag"></p>
     </div>
 </body>
 </html>
