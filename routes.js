@@ -32,8 +32,10 @@ const checkName = (id, name) => {
         const dataJSON = fs.readFileSync(`./db/${id}.json`, "utf8");
         const raw = JSON.parse(dataJSON);
         const users = raw.users;
+        name = name.toLowerCase();
 
         for (i in users) {
+            users[i] = users[i].toLowerCase();
             if (name == users[i]) {
                 return false;
             }
@@ -58,7 +60,7 @@ const checkName = (id, name) => {
 
 const createDB = (req, res, next) => {
     ID = gen(6);
-    text = { content: "Let's start edeting!", users: {} };
+    text = { content: "Let's start edeting!", users: [] };
     const welcomeText = JSON.stringify(text);
     if (fs.existsSync(`./db/${ID}.json`)) {
         res.json({
