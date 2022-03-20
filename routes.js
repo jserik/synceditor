@@ -191,7 +191,7 @@ const addUser = (req, res, next) => {
             res.json({
                 status: "failure",
                 error:
-                    //Wrong ID or the name aleready exsists or the name is mutual!
+                    // Wrong ID or the name aleready exsists or the name is mutual!
                     "User Name not allowed or allready exists!",
             });
         }
@@ -237,17 +237,17 @@ router.post("/api/createUser", addUser);
 
 router.post("/api/getUser", returnUser);
 
-//home Page
+// home Page
 router.get("/", (req, res, next) => {
     res.sendFile(path.join(__dirname, "./client/homePage.html"));
 });
 
-//waiting Page
+// waiting Page
 router.get("/wait", (req, res, next) => {
     res.sendFile(path.join(__dirname, "./client/waitingPage.html"));
 });
 
-//editing Page
+// editing Page
 router.get("/edit", (req, res, next) => {
     res.sendFile(path.join(__dirname, "./client/editingPage.html"));
 });
