@@ -13,10 +13,6 @@ const path = require("path");
 //    });
 //};
 
-// Input: None
-// Doing: creates ID and creates a database for same ID
-// Output: your ID
-
 const validate = (validateCode) => {
     let isNum = /^\d+$/.test(validateCode);
     try {
@@ -31,7 +27,6 @@ const validate = (validateCode) => {
     }
 };
 
-// currently in Work!
 const checkName = (id, name) => {
     try {
         const dataJSON = fs.readFileSync(`./db/${id}.json`, "utf8");
@@ -39,34 +34,37 @@ const checkName = (id, name) => {
         const users = raw.users;
 
         for (i in users) {
-           if (users[i] == name) {
+            if (name == users[i]) {
                 return false;
-           } 
+            }
+        }
+        const badwordsraw = fs.readFileSync(`./badwords.json`, "utf8");
+        const badwords = JSON.parse(badwordsraw);
+        for (i in badwords) {
+            if (name == badwords[i]) {
+                return false;
+            }
         }
         return true;
-
     } catch (err) {
         console.log(err);
         return false;
     }
 };
 
+// Input: None
+// Doing: creates ID and creates a database for same ID
+// Output: your ID
+
 const createDB = (req, res, next) => {
     ID = gen(6);
     text = { content: "Let's start edeting!", users: {} };
     const welcomeText = JSON.stringify(text);
-    // let isNum= /^\d+$/.test(userID);
-    // const inputJSON = JSON.stringify(req.body.data);
     if (fs.existsSync(`./db/${ID}.json`)) {
         res.json({
             status: "failure",
             error: `A room with following ID: ${ID} already exists!`,
         });
-        // } else if (!isNum || userID.lenght > 6 || userID.lenght < 6) {
-        //    res.json({
-        //        status: "failure",
-        //        error: `This Id does not fit the requirements: ${userID}`,
-        //    });
     } else {
         try {
             fs.writeFileSync(`./db/${ID}.json`, welcomeText);
@@ -76,13 +74,11 @@ const createDB = (req, res, next) => {
                 error: `Just try again`,
             });
         }
-
         res.json({
             status: "success",
             id: ID,
         });
     }
-
     res.end();
 };
 
@@ -93,7 +89,6 @@ const getData = (req, res, next) => {
     try {
         if (validate(code)) {
             const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");
-
             const raw = JSON.parse(dataJSON);
             const data = raw.content;
 
@@ -150,7 +145,6 @@ const addUser = (req, res, next) => {
     let user = req.body.user;
     try {
         if (validate(code) && checkName(code, user)) {
-
             try {
                 const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");
                 const raw = JSON.parse(dataJSON);
@@ -169,7 +163,7 @@ const addUser = (req, res, next) => {
         } else {
             res.json({
                 status: "failure",
-                message: "No Document with follwing ID could be found!",
+                message: "Wrong ID or the name aleready exsists or the name is mutual!",
             });
         }
     } catch (err) {
@@ -205,8 +199,6 @@ const returnUser = (req, res, next) => {
 router.post("/api/retrieve", getData);
 
 router.post("/api/update", updateData);
-
-// router.get("/api/createid", createUser);
 
 router.post("/api/create", createDB);
 
