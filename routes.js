@@ -60,7 +60,7 @@ const checkName = (id, name) => {
 
 const createDB = (req, res, next) => {
     ID = gen(6);
-    text = { content: "Let's start edeting!", users: [] };
+    text = { content: "Let's start edeting!", users: [], lastEdited: "none" };
     const welcomeText = JSON.stringify(text);
     if (fs.existsSync(`./db/${ID}.json`)) {
         res.json({
@@ -97,6 +97,7 @@ const getData = (req, res, next) => {
             res.json({
                 status: "sucess",
                 id: code,
+                lastEditor: raw.lastEdited,
                 data: data,
             });
         } else {
@@ -110,18 +111,23 @@ const getData = (req, res, next) => {
     }
 };
 
-// Input: ID, newe Text
+// Input: ID, newText, last editor(user)
 // Doing: updates database with your input
 // Output: your ID + your input
 const updateData = (req, res, next) => {
     let code = req.body.id;
+    let user = req.body.editor;
     try {
-        if (validate(code)) {
-            input = { content: req.body.data, users: req.body.users };
-            const inputJSON = JSON.stringify(input);
+        if (validate(code) & !checkName(code, user)) {
+            const inputJSON = req.body.data;
 
             try {
-                fs.writeFileSync(`./db/${code}.json`, inputJSON);
+                const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");
+                const raw = JSON.parse(dataJSON);
+                raw.content = inputJSON;
+                raw.lastEdited = user;
+                var json = JSON.stringify(raw, null, 2);
+                fs.writeFileSync(`./db/${code}.json`, json);
             } catch (err) {
                 console.log(err);
             }
@@ -134,7 +140,7 @@ const updateData = (req, res, next) => {
         } else {
             res.json({
                 status: "failure",
-                message: "No Document with follwing ID could be found!",
+                message: "No Document with follwing ID could be found or the editor is no approved user!",
             });
         }
     } catch (err) {
@@ -165,7 +171,8 @@ const addUser = (req, res, next) => {
         } else {
             res.json({
                 status: "failure",
-                message: "Wrong ID or the name aleready exsists or the name is mutual!",
+                message:
+                    "Wrong ID or the name aleready exsists or the name is mutual!",
             });
         }
     } catch (err) {
