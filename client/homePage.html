@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title>Document</title>
+    <title>Real Time Texteditor</title>
 </head>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
@@ -19,8 +19,18 @@
     h1{
         margin-bottom: 0%;
     }
-    .creditsUnderline{
-        margin-top: 0%;
+
+    #creditsDiv{
+        margin-top: 0px;
+        margin-bottom: 10px;
+    }
+
+    .credits{
+        transition: all .2s ease-in-out;
+    }
+
+    .credits:hover{
+        font-size: 22px
     }
 
     #rooms{
@@ -50,6 +60,7 @@
         border-width: 2px;
         border-color: black;
 
+        text-align: center;
         font-size: larger;
         font-family: 'Roboto Mono', monospace;
     }
@@ -163,7 +174,13 @@
 <body>
     <div id="heading">
         <h1>Real-Time-Text-Editor</h1>
-        <p class="creditsUnderline">Project by: Moritttzzzz, Deepmoon a. Joshua</p>
+        <div id="creditsDiv">
+            <span>by:</span>
+            <span class="credits" onclick="window.open('https://github.com/moritttzzzz', '_blank');">Moritttzzzz</span><span>,</span>
+            <span class="credits" onclick="window.open('https://github.com/jserik', '_blank');">Deepmoon</span>
+            <span>a.</span> 
+            <span class="credits" onclick="window.open('https://github.com/GerDevJ', '_blank');">Joshua</span>
+        </div>
     </div>
     <div id="rooms">
         <h2>Create a room</h2>

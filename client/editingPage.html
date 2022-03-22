@@ -31,10 +31,53 @@
         const ID = params.id; // "some_value"
         console.log(ID)
 
-        last_input = null
+        const xhr =  new XMLHttpRequest();
+
+        last_input = ""
+        
+        //paar Bugs, aber nichts bedeutendes
+        function compareString(x, y){ //x = uhrsprünglich, y = neu => 
+            if(x.length>y.length){ //kleinerer String => wurde gekürzt x>y
+                for(let i = 0; i<x.length; i++){
+                    //console.log(String(x)+" "+String(y[i])+" --- "+String(x.length)+" "+String(i)) //kleiner Bug bei der Darstellung wird der gesamte Text angezeigt
+                    if(x[i]!==y[i]){
+                        return {"Pos":String(i),"Change":String(-1),"Char":String(x[i])}
+                    }
+                    else if(i===x.length-1){
+                        return {"Pos":String(i+1),"Change":String(-1),"Char":String(x[x.length])}
+                    }
+                }
+                
+            }
+            else if(x.length<y.length){ //kleinerer String => wurde verländert x<y
+                for(let i = 0; i<y.length; i++){
+                    //console.log(String(x[i])+" "+String(y[i])+" --- "+String(y.length)+" "+String(i))
+                    if(x[i]!==y[i]){
+                        return {"Pos":String(i),"Change":String(1),"Char":String(y[i])}
+                    }
+                    else if(i===y.length-1){
+                        return {"Pos":String(i+1),"Change":String(1),"Char":String(y[y.length])}
+                    }
+                }
+            }
+            return {"Error":"Something went completely wrong"} 
+        }
+
+        function onTextUpdate(e){
+            let results = compareString(last_input, e.value)
+            console.log(results)
+            globalThis.last_input = e.value;
+
+            //post the results to back end
+            xhr.open('POST', '/api/update', false);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(results);
+            console.log(JSON.parse(xhr.responseText));
+        }
 
         TextUpdateHeavy = function(e){
             SendData(e.value)
+            globalThis.last_input = e.value;
         }
 
         TextUpdateLeightWeight = function (e){
@@ -81,6 +124,6 @@
         
     </div>
     <h1>Real Time Texteditor</h1>
-    <textarea id="textarea" placeholder="Just write ..." oninput="TextUpdateHeavy(this)"></textarea>
+    <textarea id="textarea" placeholder="Just write ..." oninput="onTextUpdate(this)"></textarea>
 </body>
 </html>
