@@ -4,15 +4,6 @@ const { gen } = require("n-digit-token");
 const fs = require("fs");
 const path = require("path");
 
-//const createUser = (req, res, next) => {
-//    ID = gen(6);
-
-//    res.json({
-//        status: "success",
-//        id: ID,
-//    });
-//};
-
 const validate = (validateCode) => {
     let isNum = /^\d+$/.test(validateCode);
     try {
@@ -54,6 +45,11 @@ const checkName = (id, name) => {
     }
 };
 
+const acceptUser = (req, res, next) => {
+    let currentUser = req.body.user;
+    let isAccepted = False;
+    
+};
 // Input: ID
 // Doing: creates ID and creates a database for same ID
 // Output: if DB with that ID or not
@@ -224,6 +220,8 @@ const returnUser = (req, res, next) => {
         res.send(err);
     }
 };
+
+
 
 router.post("/api/checkID", checkForID);
 
