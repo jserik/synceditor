@@ -3,6 +3,7 @@ const router = express.Router();
 const { gen } = require("n-digit-token");
 const fs = require("fs");
 const path = require("path");
+const { networkInterfaces } = require("os");
 
 const validate = (validateCode) => {
     let isNum = /^\d+$/.test(validateCode);
@@ -45,11 +46,18 @@ const checkName = (id, name) => {
     }
 };
 
-const acceptUser = (req, res, next) => {
-    let currentUser = req.body.user;
-    let isAccepted = False;
-    
-};
+function rebuildString(text, pos, change, char){
+    if(change==-1){
+        return text.slice(0, pos) + text.slice(pos+1, text.length);
+    }
+    else if(change==1){
+        if(text.length==0){
+            return char
+        }
+        return text.slice(0, pos) + char + text.slice(pos, text.length);
+    }
+}
+
 // Input: ID
 // Doing: creates ID and creates a database for same ID
 // Output: if DB with that ID or not
@@ -75,7 +83,7 @@ const checkForID = (req, res, next) => {
 
 const createDB = (req, res, next) => {
     ID = gen(6);
-    text = { content: "Let's start edeting!", users: [], lastEdited: "none" };
+    text = { content: "", users: [], lastEdited: "none" };
     const welcomeText = JSON.stringify(text);
     if (fs.existsSync(`./db/${ID}.json`)) {
         res.json({
@@ -99,12 +107,13 @@ const createDB = (req, res, next) => {
     res.end();
 };
 
-// Input: ID
+// Input: ID, NAME
 // Output: returns current data for that ID
 const getData = (req, res, next) => {
     let code = req.body.id;
+    let name = req.body.name;
     try {
-        if (validate(code)) {
+        if (validate(code)&&!checkName(code, name)) {
             const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");
             const raw = JSON.parse(dataJSON);
             const data = raw.content;
@@ -118,7 +127,7 @@ const getData = (req, res, next) => {
         } else {
             res.json({
                 status: "failure",
-                error: "No Document with follwing ID could be found!",
+                error: "No Document with follwing ID or related Name could be found!",
             });
         }
     } catch (err) {
@@ -126,31 +135,32 @@ const getData = (req, res, next) => {
     }
 };
 
-// Input: ID, newText, last editor(user)
+// Input: {"update":{"pos": ..., "change": ..., "char": ...}, "id": ... , "name": ... }
 // Doing: updates database with your input
-// Output: your ID + your input
+// Output: {"status":"success"} / {"status":"error"}
 const updateData = (req, res, next) => {
     let code = req.body.id;
-    let user = req.body.editor;
+    let user = req.body.name;
+    let updatePos = req.body.update.pos
+    let updateChange = req.body.update.change
+    let updateChar = req.body.update.char
     try {
         if (validate(code) & !checkName(code, user)) {
-            const inputJSON = req.body.data;
-
-            try {
-                const dataJSON = fs.readFileSync(`./db/${code}.json`, "utf8");
-                const raw = JSON.parse(dataJSON);
-                raw.content = inputJSON;
-                raw.lastEdited = user;
-                var json = JSON.stringify(raw, null, 2);
-                fs.writeFileSync(`./db/${code}.json`, json);
-            } catch (err) {
-                console.log(err);
-            }
-
+            
+            let data = fs.readFileSync(`./db/${code}.json`, "utf8")
+            const raw = JSON.parse(data);
+            //console.log(raw.content + " " + updatePos + " " + updateChange + " " + updateChar)
+            let newText = rebuildString(raw.content, updatePos, updateChange, updateChar);
+            //console.log(raw.content);
+            //console.log(newText);
+            raw.content = newText; 
+            raw.lastEdited = user;
+            var json = JSON.stringify(raw, null, 2);
+            fs.writeFileSync(`./db/${code}.json`, json);
+            
             res.json({
-                status: "success, updated",
+                status: "success",
                 id: code,
-                data: inputJSON,
             });
         } else {
             res.json({
