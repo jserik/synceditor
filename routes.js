@@ -5,15 +5,6 @@ const fs = require("fs");
 const path = require("path");
 const { networkInterfaces } = require("os");
 
-//const createUser = (req, res, next) => {
-//    ID = gen(6);
-
-//    res.json({
-//        status: "success",
-//        id: ID,
-//    });
-//};
-
 const validate = (validateCode) => {
     let isNum = /^\d+$/.test(validateCode);
     try {
@@ -239,6 +230,8 @@ const returnUser = (req, res, next) => {
         res.send(err);
     }
 };
+
+
 
 router.post("/api/checkID", checkForID);
 
