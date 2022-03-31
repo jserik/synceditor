@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!--<link rel="stylesheet" href="editingPage.css">-->
     <!--<script src="editingPage.js"></script>-->
     <title>Real Time Texteditor</title>
@@ -49,24 +48,24 @@
         const xhr =  new XMLHttpRequest();
 
         last_input = ""
-                
-        $( document ).ready(function() {
+        
+
+        window.onload = function(){
             xhr.open('POST', '/api/retrieve', false);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send(JSON.stringify({"id":ID, "name":NAME}));
             response = JSON.parse(xhr.responseText);
             //console.log(response);
             if(response.status==="error"){
-                $('#ErrorParag').text(response.error)
-                $("#ErrorParag").css('color', 'red');
+                document.getElementById("ErrorParag").innerHTML = response.error
+                document.getElementById("ErrorParag").style.color = "#ff0000";
             } else if(response.status==="success"){
-                $('#textarea').text(response.data)
+                document.getElementById("textarea").innerHTML = response.data
             }
-        });
+        };
 
-        //paar Bugs, aber nichts bedeutendes
-        function compareString(x, y){ //x = uhrsprünglich, y = neu => 
-            if(x.length>y.length){ //kleinerer String => wurde gekürzt x>y
+        function compareString(x, y){ //x = originally, y = new => 
+            if(x.length>y.length){ //smaller String => char was deleted x>y
                 for(let i = 0; i<x.length; i++){
                     //console.log(String(x)+" "+String(y[i])+" --- "+String(x.length)+" "+String(i)) //kleiner Bug bei der Darstellung wird der gesamte Text angezeigt
                     if(x[i]!==y[i]){
@@ -78,7 +77,7 @@
                 }
                 
             }
-            else if(x.length<y.length){ //kleinerer String => wurde verländert x<y
+            else if(x.length<y.length){ //bigger String => char was added x<y
                 for(let i = 0; i<y.length; i++){
                     //console.log(String(x[i])+" "+String(y[i])+" --- "+String(y.length)+" "+String(i))
                     if(x[i]!==y[i]){
@@ -89,53 +88,51 @@
                     }
                 }
             }
-            return {"Error":"Something went completely wrong"} 
+            return {"Error":"Something went completely wrong"};
         }
 
         function onTextUpdate(e){
-            clearInterval(load_data); // stop the interval, which loads the data from the server
             let results = compareString(last_input, e.value)
             //console.log(results)
             globalThis.last_input = e.value;
 
-            send_data = JSON.stringify({"update":results, "id":ID, "name":NAME}) // {"update":{"pos": ..., "change": ..., "char": ...}, "id": ... , "name": ... }
+            send_data = JSON.stringify({"update":results, "id":ID, "name":NAME}); // {"update":{"pos": ..., "change": ..., "char": ...}, "id": ... , "name": ... }
             //console.log("Data which is gonna be send:")
-            console.log(send_data)
+            //console.log(send_data)
             
             //post the results to back end
             xhr.open('POST', '/api/update', false);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send(send_data);
             response = JSON.parse(xhr.responseText);
-            console.log(response);
+            //console.log(response);
             if(response.status==="failure"){
-                $('#ErrorParag').text(response.error)
-                $("#ErrorParag").css('color', 'red');
+                document.getElementById("ErrorParag").innerHTML = response.error;
+                document.getElementById("ErrorParag").style.color = "#ff0000";
             } else if(response.status==="success"){
-                $('#ErrorParag').text("success")
-                $("#ErrorParag").css('color', 'green');
+                document.getElementById("ErrorParag").innerHTML = "success"
+                document.getElementById("ErrorParag").style.color = "#00ff00";
             }
-
-            let load_data = setInterval(loadData, 1000) // restart the interval
         }
         
         const loadData = function(){
-            console.log("get data from server")
+            //console.log("get data from server")
             xhr.open('POST', '/api/retrieve', false);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send(JSON.stringify({"id":ID, "name":NAME}));
             response = JSON.parse(xhr.responseText);
-            console.log(response);
-            if(response.status==="failure"){
-                $('#ErrorParag').text(response.error)
-                $("#ErrorParag").css('color', 'red');
+            //console.log(response.data);
+            
+            if(response.status==="error"){
+                //document.getElementById("ErrorParag").innerHTML = response.error
+                document.getElementById("ErrorParag").style.color = "#ff0000";
             } else if(response.status==="success"){
-                $('#textarea').text(response.data)
+                //console.log("success!")
+                document.getElementById("textarea").value = response.data;
             }
         }
 
-        let load_data = setInterval(loadData, 1000)
-
+        const load_data = setInterval(loadData, 1000)
     
     </script>
 </head>
